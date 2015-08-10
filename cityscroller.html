@@ -1,0 +1,154 @@
+<html>
+	<head>
+		<title>GWC City Scroller Project</title>
+		<script src="http://cloud.github.com/downloads/processing-js/processing-js/processing-1.4.1.min.js"></script>
+		<script type="text/processing" data-processing-target="mycanvas">
+		
+		class Building{
+
+			var width;
+			var height;
+			var xpos;
+			var ypos;
+
+			Building(w, h, x, y)
+			{
+				width = w;
+				height = h;
+				xpos = x;
+				ypos = y;
+			}
+
+			void appear()
+			{
+				
+				noStroke();
+				rect(xpos, ypos, width, height);
+			}
+		}
+
+		class Layer{
+			var myBuildings;
+			var red;
+			var blue;
+			var green;
+			var speed;
+			var ypos;
+
+			Layer(r, g, b, layerspeed, y)
+			{
+				myBuildings = new Array();
+				red =r;
+				blue = b;
+				green = g;
+				speed = layerspeed;
+				ypos = y;
+			}
+
+			void create()
+			{
+				var x = 50;
+				var z = Math.random()*60+40;
+				while(x<900)
+				{
+					var hei = Math.floor(Math.random()*ypos)+ypos-200;
+					var z = Math.random()*100+40;
+					fill(red, green, blue);
+					var build = new Building(z, 600- hei, x, hei);
+					myBuildings.push(build);
+					build.appear();
+					x = x +(z);
+
+				}
+			}
+
+			void appear()
+			{
+				for (var i=0; i<myBuildings.length; i++)
+				{
+					fill(red, green, blue);
+					myBuildings[i].appear();
+				}
+			}
+
+			void move()
+			{
+				for (var i = 0; i < myBuildings.length; i++)
+				{
+					myBuildings[i].xpos+=speed;
+					
+					if (speed <0)
+					{
+						if (myBuildings[i].xpos < -100)
+						{
+							myBuildings[i].xpos = 900;
+						}
+					}
+					else
+					{
+						if (myBuildings[i].xpos > 900)
+					{
+						myBuildings[i].xpos = -100;
+					}
+					}
+				}
+			}
+
+		}
+
+		var frontlayer;
+		var midlayer;
+		var backlayer;
+
+		void setup()
+		{
+			size(800,600);
+			background(17,9,89);
+			
+			
+			backlayer = new Layer(100,100,100,10,250);
+			backlayer.create();
+			
+			
+			midlayer = new Layer(60,60,60,-7,350);
+			midlayer.create();
+			
+			
+			frontlayer = new Layer(0,0,0,4,500);
+			frontlayer.create();
+			
+
+		}
+
+		void draw()
+		{
+			background(17,9,89);
+
+			fill(215,199,60);
+			ellipse(50,50,60,60);
+
+			
+			backlayer.move();
+			backlayer.appear();
+			rect(0,300,800,200);
+
+			
+			midlayer.move();
+			midlayer.appear();
+			rect(0,400,800,200);
+
+			frontlayer.move();
+			frontlayer.appear();
+			rect(0,500,800,200);
+		}
+
+
+
+
+
+		</script>
+	</head>
+	<body>
+		<canvas id="mycanvas"></canvas>
+	</body>
+</html>
